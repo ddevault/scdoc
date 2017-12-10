@@ -1,6 +1,6 @@
 VERSION=1.0.0
 CC=cc
-CFLAGS=-DVERSION='"$(VERSION)"' -Wall -Wextra -Werror -Wno-unused-parameter -std=c99 -pedantic
+CFLAGS=-DVERSION='"$(VERSION)"' -Wall -Wextra -Werror -Wno-unused-parameter
 LDFLAGS=-static
 INCLUDE=-Iinclude
 PREFIX=/usr/local
@@ -23,7 +23,7 @@ OBJECTS=\
 
 .build/%.o: src/%.c
 	@mkdir -p .build
-	$(CC) -std=c99 -c -o $@ $(CFLAGS) $(INCLUDE) $<
+	$(CC) -std=c99 -pedantic -c -o $@ $(CFLAGS) $(INCLUDE) $<
 
 scdoc: $(OBJECTS)
 	$(CC) $(LDFLAGS) -o $@ $^
