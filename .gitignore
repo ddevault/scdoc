@@ -1,1 +1,3 @@
-build
+.build
+scdoc
+scdoc.1
