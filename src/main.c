@@ -66,7 +66,14 @@ static void parse_text(struct parser *p) {
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
 		switch (ch) {
 		case '\\':
-			fprintf(p->output, "\\\\");
+			ch = parser_getch(p);
+			if (ch == UTF8_INVALID) {
+				parser_fatal(p, "Unexpected EOF");
+			} else if (ch == '\\') {
+				fprintf(p->output, "\\\\");
+			} else {
+				utf8_fputch(p->output, ch);
+			}
 			break;
 		case '.':
 			if (!i) {
@@ -146,15 +153,22 @@ static void parse_document(struct parser *p) {
 			break;
 		}
 
+		if (indent != 0) {
+			// Only text is allowed at this point
+			parser_pushch(p, ch);
+			parse_text(p);
+			continue;
+		}
+
 		switch (ch) {
 		case '#':
 			parse_heading(p);
 			break;
-		case '\n':
-			roff_macro(p, "P", NULL);
-			break;
 		case ' ':
 			parser_fatal(p, "Tabs are required for indentation");
+			break;
+		case '\n':
+			roff_macro(p, "P", NULL);
 			break;
 		default:
 			parser_pushch(p, ch);
