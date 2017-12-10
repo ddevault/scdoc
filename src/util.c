@@ -14,6 +14,9 @@ void parser_fatal(struct parser *parser, const char *err) {
 }
 
 uint32_t parser_getch(struct parser *parser) {
+	if (parser->qhead) {
+		return parser->queue[--parser->qhead];
+	}
 	uint32_t ch = utf8_fgetch(parser->input);
 	if (ch == '\n') {
 		parser->col = 0;
@@ -22,6 +25,12 @@ uint32_t parser_getch(struct parser *parser) {
 		++parser->col;
 	}
 	return ch;
+}
+
+void parser_pushch(struct parser *parser, uint32_t ch) {
+	if (ch != UTF8_INVALID) {
+		parser->queue[parser->qhead++] = ch;
+	}
 }
 
 int roff_macro(struct parser *p, char *cmd, ...) {

@@ -62,11 +62,19 @@ static void parse_preamble(struct parser *p) {
 
 static void parse_text(struct parser *p) {
 	uint32_t ch;
+	int i = 0;
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
 		switch (ch) {
 		case '\\':
 			fprintf(p->output, "\\\\");
 			break;
+		case '.':
+			if (!i) {
+				// Escape . if it's the first character
+				fprintf(p->output, "\\&.");
+				break;
+			}
+			/* fallthrough */
 		default:
 			utf8_fputch(p->output, ch);
 			break;
@@ -74,6 +82,7 @@ static void parse_text(struct parser *p) {
 		if (ch == '\n') {
 			break;
 		}
+		++i;
 	}
 }
 
@@ -108,9 +117,35 @@ static void parse_heading(struct parser *p) {
 	}
 }
 
+static int parse_indent(struct parser *p) {
+	int i = 0;
+	uint32_t ch;
+	while ((ch = parser_getch(p)) == '\t') {
+		++i;
+	}
+	parser_pushch(p, ch);
+	return i;
+}
+
 static void parse_document(struct parser *p) {
 	uint32_t ch;
-	while ((ch = parser_getch(p)) != UTF8_INVALID) {
+	int indent = 0;
+	do {
+		int i = parse_indent(p);
+		if (i == indent - 1) {
+			roff_macro(p, "RE", NULL);
+		} else if (i == indent + 1) {
+			roff_macro(p, "RS", "4", NULL);
+		} else if (i != indent && ch == '\t') {
+			parser_fatal(p, "(De)indented by an amount greater than 1");
+		}
+		indent = i;
+
+		ch = parser_getch(p);
+		if (ch == UTF8_INVALID) {
+			break;
+		}
+
 		switch (ch) {
 		case '#':
 			parse_heading(p);
@@ -118,16 +153,15 @@ static void parse_document(struct parser *p) {
 		case '\n':
 			roff_macro(p, "P", NULL);
 			break;
+		case ' ':
+			parser_fatal(p, "Tabs are required for indentation");
+			break;
 		default:
-			if (ch == '.') {
-				fprintf(p->output, "\\&.");
-			} else {
-				utf8_fputch(p->output, ch);
-			}
+			parser_pushch(p, ch);
 			parse_text(p);
 			break;
 		}
-	}
+	} while (ch != UTF8_INVALID);
 }
 
 static void output_scdoc_preamble(struct parser *p) {
