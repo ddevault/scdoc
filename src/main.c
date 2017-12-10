@@ -362,7 +362,7 @@ static void output_scdoc_preamble(struct parser *p) {
 
 int main(int argc, char **argv) {
 	if (argc > 1) {
-		fprintf(stderr, "Usage: scdoc < input.scd > output.roff");
+		fprintf(stderr, "Usage: scdoc < input.scd > output.roff\n");
 		return 1;
 	}
 	struct parser p = {
