@@ -157,13 +157,19 @@ static int parse_indent(struct parser *p, int *indent, bool write) {
 		++i;
 	}
 	parser_pushch(p, ch);
+	if (ch == '\n' && *indent != 0) {
+		// Don't change indent when we encounter empty lines
+		return *indent;
+	}
 	if (write) {
-		if (i == *indent - 1) {
-			roff_macro(p, "RE", NULL);
+		if (i < *indent) {
+			for (int j = *indent; i < j; --j) {
+				roff_macro(p, "RE", NULL);
+			}
 		} else if (i == *indent + 1) {
 			roff_macro(p, "RS", "4", NULL);
 		} else if (i != *indent && ch == '\t') {
-			parser_fatal(p, "(De)indented by an amount greater than 1");
+			parser_fatal(p, "Indented by an amount greater than 1");
 		}
 	}
 	*indent = i;

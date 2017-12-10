@@ -55,7 +55,8 @@ the output. Indented lines may not contain headers.
 
 	You may use multiple lines and most _formatting_.
 
-Deindent to return to normal.
+Deindent to return to normal, or indent again to increase your indentation
+depth.
 
 ## LISTS
 
