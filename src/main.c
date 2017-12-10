@@ -9,8 +9,6 @@
 #include "unicode.h"
 #include "util.h"
 
-char date[256];
-
 static int parse_section(struct parser *p) {
 	str_t *section = str_create();
 	uint32_t ch;
@@ -41,6 +39,11 @@ static void parse_preamble(struct parser *p) {
 	str_t *name = str_create();
 	int section = -1;
 	uint32_t ch;
+	char date[256];
+	time_t now;
+	time(&now);
+	struct tm *now_tm = localtime(&now);
+	strftime(date, sizeof(date), "%F", now_tm);
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
 		if (isalnum(ch)) {
 			assert(str_append_ch(name, ch) != -1);
@@ -248,10 +251,6 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "Usage: scdoc < input.scd > output.roff");
 		return 1;
 	}
-	time_t now;
-	time(&now);
-	struct tm *now_tm = localtime(&now);
-	strftime(date, sizeof(date), "%F", now_tm);
 	struct parser p = {
 		.input = stdin,
 		.output = stdout,
