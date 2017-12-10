@@ -60,6 +60,22 @@ static void parse_preamble(struct parser *p) {
 	str_free(name);
 }
 
+static void parse_format(struct parser *p, enum formatting fmt) {
+	char formats[FORMAT_LAST] = {
+		[FORMAT_BOLD] = 'B',
+		[FORMAT_UNDERLINE] = 'I',
+	};
+	if (p->flags) {
+		if ((p->flags & ~fmt)) {
+			parser_fatal(p, "Cannot nest inline formatting.");
+		}
+		fprintf(p->output, "\\fR");
+	} else {
+		fprintf(p->output, "\\f%c", formats[fmt]);
+	}
+	p->flags ^= fmt;
+}
+
 static void parse_text(struct parser *p) {
 	uint32_t ch;
 	int i = 0;
@@ -74,6 +90,12 @@ static void parse_text(struct parser *p) {
 			} else {
 				utf8_fputch(p->output, ch);
 			}
+			break;
+		case '*':
+			parse_format(p, FORMAT_BOLD);
+			break;
+		case '_':
+			parse_format(p, FORMAT_UNDERLINE);
 			break;
 		case '.':
 			if (!i) {

@@ -9,6 +9,13 @@ struct parser {
 	int line, col;
 	int qhead;
 	uint32_t queue[32];
+	uint32_t flags;
+};
+
+enum formatting {
+	FORMAT_BOLD = 1,
+	FORMAT_UNDERLINE = 2,
+	FORMAT_LAST = 4,
 };
 
 void parser_fatal(struct parser *parser, const char *err);

@@ -41,7 +41,7 @@ or \_underlined\_.
 
 # INDENTATION
 
-You may indent lines with tab characters ("\t") to indent them by 4 spaces in
+You may indent lines with tab characters (*\\t*) to indent them by 4 spaces in
 the output. Indented lines may not contain headers.
 
 # LISTS
