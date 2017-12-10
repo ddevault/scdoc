@@ -38,6 +38,6 @@ clean:
 install: all
 	mkdir -p $(DESTDIR)
 	install -Dm755 scdoc $(BINDIR)/scdoc
-	install -Dm644 scdoc.1 $(MANDIR)/scdoc.1
+	install -Dm644 scdoc.1 $(MANDIR)/man1/scdoc.1
 
 .PHONY: all clean install
