@@ -171,8 +171,8 @@ static int parse_indent(struct parser *p, int *indent, bool write) {
 		} else if (i != *indent && ch == '\t') {
 			parser_fatal(p, "Indented by an amount greater than 1");
 		}
-		*indent = i;
 	}
+	*indent = i;
 	return i;
 }
 
@@ -220,9 +220,10 @@ static void parse_list(struct parser *p, int *indent) {
 		default:
 			fprintf(p->output, "\n");
 			parser_pushch(p, ch);
-			return;
+			goto ret;
 		}
 	} while (ch != UTF8_INVALID);
+ret:
 	if (!closed) {
 		roff_macro(p, "RE", NULL);
 	}
