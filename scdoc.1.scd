@@ -78,6 +78,23 @@ The result looks like this:
 	- Subitem 2
 - Item 3
 
+You may also extend long entries onto another line by giving it the same indent
+level, plus two spaces. They will be rendered as a single list entry.
+
+```
+- Item 1 is pretty long so let's
+  break it up onto two lines
+- Item 2 is shorter
+	- But its children can go on
+	  for a while
+```
+
+- Item 1 is pretty long so let's
+  break it up onto two lines
+- Item 2 is shorter
+	- But its children can go on
+	  for a while
+
 ## LITERAL TEXT
 
 You may turn off scdoc formatting and output literal text with escape codes and

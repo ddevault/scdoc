@@ -193,7 +193,7 @@ static void parse_list(struct parser *p, int *indent) {
 	}
 	list_header(p, "\\(bu");
 	parse_text(p);
-	roff_macro(p, "RE", NULL);
+	bool closed = false;
 	do {
 		parse_indent(p, indent, true);
 		if ((ch = parser_getch(p)) == UTF8_INVALID) {
@@ -201,14 +201,21 @@ static void parse_list(struct parser *p, int *indent) {
 		}
 		switch (ch) {
 		case ' ':
+			if ((ch = parser_getch(p)) != ' ') {
+				parser_fatal(p, "Expected two spaces for list entry continuation");
+			}
+			parse_text(p);
 			break;
 		case '-':
 			if ((ch = parser_getch(p)) != ' ') {
 				parser_fatal(p, "Expected space before start of list entry");
 			}
+			if (!closed) {
+				roff_macro(p, "RE", NULL);
+			}
 			list_header(p, "\\(bu");
 			parse_text(p);
-			roff_macro(p, "RE", NULL);
+			closed = false;
 			break;
 		default:
 			fprintf(p->output, "\n");
@@ -216,6 +223,9 @@ static void parse_list(struct parser *p, int *indent) {
 			return;
 		}
 	} while (ch != UTF8_INVALID);
+	if (!closed) {
+		roff_macro(p, "RE", NULL);
+	}
 }
 
 static void parse_literal(struct parser *p, int *indent) {
