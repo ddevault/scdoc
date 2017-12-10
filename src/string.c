@@ -34,11 +34,6 @@ void str_free(str_t *str) {
 	free(str);
 }
 
-void str_reset(str_t *str) {
-	str->len = 0;
-	str->str[0] = '\0';
-}
-
 int str_append_ch(str_t *str, uint32_t ch) {
 	int size = utf8_chsize(ch);
 	if (size <= 0) {
