@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -97,6 +98,9 @@ static void parse_text(struct parser *p) {
 		case '_':
 			parse_format(p, FORMAT_UNDERLINE);
 			break;
+		case '\n':
+			utf8_fputch(p->output, ch);
+			return;
 		case '.':
 			if (!i) {
 				// Escape . if it's the first character
@@ -106,9 +110,6 @@ static void parse_text(struct parser *p) {
 			/* fallthrough */
 		default:
 			utf8_fputch(p->output, ch);
-			break;
-		}
-		if (ch == '\n') {
 			break;
 		}
 		++i;
@@ -146,45 +147,74 @@ static void parse_heading(struct parser *p) {
 	}
 }
 
-static int parse_indent(struct parser *p) {
+static int parse_indent(struct parser *p, int *indent) {
 	int i = 0;
 	uint32_t ch;
 	while ((ch = parser_getch(p)) == '\t') {
 		++i;
 	}
 	parser_pushch(p, ch);
+	if (i == *indent - 1) {
+		roff_macro(p, "RE", NULL);
+	} else if (i == *indent + 1) {
+		roff_macro(p, "RS", "4", NULL);
+	} else if (i != *indent && ch == '\t') {
+		parser_fatal(p, "(De)indented by an amount greater than 1");
+	}
+	*indent = i;
 	return i;
+}
+
+static void parse_list(struct parser *p, int *indent) {
+	uint32_t ch;
+	if ((ch = parser_getch(p)) != ' ') {
+		parser_fatal(p, "Expected space before start of list entry");
+	}
+	roff_macro(p, "IP", "\\(bu", "4", NULL);
+	parse_text(p);
+	do {
+		parse_indent(p, indent);
+		if ((ch = parser_getch(p)) == UTF8_INVALID) {
+			break;
+		}
+		switch (ch) {
+		case ' ':
+			break;
+		case '-':
+			if ((ch = parser_getch(p)) != ' ') {
+				parser_fatal(p, "Expected space before start of list entry");
+			}
+			fprintf(p->output, ".sp -1\n");
+			roff_macro(p, "IP", "\\(bu", "4", NULL);
+			parse_text(p);
+			break;
+		default:
+			fprintf(p->output, "\n");
+			parser_pushch(p, ch);
+			return;
+		}
+	} while (ch != UTF8_INVALID);
 }
 
 static void parse_document(struct parser *p) {
 	uint32_t ch;
 	int indent = 0;
 	do {
-		int i = parse_indent(p);
-		if (i == indent - 1) {
-			roff_macro(p, "RE", NULL);
-		} else if (i == indent + 1) {
-			roff_macro(p, "RS", "4", NULL);
-		} else if (i != indent && ch == '\t') {
-			parser_fatal(p, "(De)indented by an amount greater than 1");
-		}
-		indent = i;
-
-		ch = parser_getch(p);
-		if (ch == UTF8_INVALID) {
+		parse_indent(p, &indent);
+		if ((ch = parser_getch(p)) == UTF8_INVALID) {
 			break;
 		}
-
-		if (indent != 0) {
-			// Only text is allowed at this point
-			parser_pushch(p, ch);
-			parse_text(p);
-			continue;
-		}
-
 		switch (ch) {
 		case '#':
+			if (indent != 0) {
+				parser_pushch(p, ch);
+				parse_text(p);
+				break;
+			}
 			parse_heading(p);
+			break;
+		case '-':
+			parse_list(p, &indent);
 			break;
 		case ' ':
 			parser_fatal(p, "Tabs are required for indentation");

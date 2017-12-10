@@ -1,17 +1,24 @@
-scdoc(5)
+scdoc(1)
 
 # NAME
 
-scdoc - syntax description for scdoc markup language
+scdoc - tool for generating *roff*(7) manual pages
+
+# SYNOPSIS
+
+*scdoc* < _input_ > _output_
 
 # DESCRIPTION
 
 scdoc is a tool designed to make the process of writing man pages more
-friendly. It converts scdoc files into roff macros, which can then be converted
-to man pages or a number of other formats. The syntax is inspired by, but not
-directly taken from, markdown. Input files *must* use the UTF-8 encoding.
+friendly. It reads scdoc syntax from stdin and writes roff to stdout, suitable
+for reading with *man*(1).
 
-# PREAMBLE
+# SYNTAX
+
+Input files must use the UTF-8 encoding.
+
+## PREAMBLE
 
 Each scdoc file must begin with the following preamble:
 
@@ -20,7 +27,7 @@ Each scdoc file must begin with the following preamble:
 The *name* is the name of the man page you are writing, and _section_ is the
 section you're writing for (see *man*(1) for information on manual sections).
 
-# SECTION HEADERS
+## SECTION HEADERS
 
 Each section of your man page should begin with something similar to the
 following:
@@ -30,39 +37,47 @@ following:
 Subsection headers are also understood - use two hashes. Each header must have
 an empty line on either side.
 
-# PARAGRAPHS
+## PARAGRAPHS
 
 Begin a new paragraph with an empty line.
 
-# FORMATTING
+## FORMATTING
 
 Text can be made *bold* or _underlined_ with asterisks and underscores: \*bold\*
 or \_underlined\_.
 
-# INDENTATION
+## INDENTATION
 
 You may indent lines with tab characters (*\\t*) to indent them by 4 spaces in
 the output. Indented lines may not contain headers.
 
-# LISTS
+	The result looks something like this.
+
+	You may use multiple lines and most _formatting_.
+
+Deindent to return to normal.
+
+## LISTS
 
 You may start bulleted lists with dashes, like so:
 
 ```
 - Item 1
 - Item 2
+	- Subitem 1
+	- Subitem 2
 - Item 3
 ```
 
-You may also use numbered lists like so:
+The result looks like this:
 
-```
-1. Item 1
-2. Item 2
-3. Item 3
-```
+- Item 1
+- Item 2
+	- Subitem 1
+	- Subitem 2
+- Item 3
 
-# LITERAL TEXT
+## LITERAL TEXT
 
 You may turn off scdoc formatting and output literal text with escape codes and
 literal blocks. Inserting a \\ into your source will cause the subsequent symbol
@@ -78,3 +93,9 @@ _This formatting_ will *not* be interpreted by scdoc.
 These blocks will be indented one level. Note that literal text is shown
 literally in the man viewer - that is, it's not a means for inserting your own
 roff macros into the output.
+
+# AUTHORS
+
+Maintained by Drew DeVault <sir@cmpwn.com>. Up-to-date sources can be found at
+https://git.sr.ht/~sircmpwn/scdoc and bugs/patches can be submitted by email to
+sir@cmpwn.com.
