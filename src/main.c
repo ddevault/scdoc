@@ -234,7 +234,10 @@ static void parse_literal(struct parser *p, int *indent) {
 				return;
 			}
 		} else {
-			stops = 0;
+			while (stops != 0) {
+				fputc('`', p->output);
+				--stops;
+			}
 			switch (ch) {
 			case '.':
 				fprintf(p->output, "\\&.");

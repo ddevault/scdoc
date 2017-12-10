@@ -85,9 +85,9 @@ to be treated as a literal and copied directly to the output. You may also make
 blocks of literal syntax like so:
 
 ```
-\`\`\`
+\```
 _This formatting_ will *not* be interpreted by scdoc.
-\`\`\`
+\```
 ```
 
 These blocks will be indented one level. Note that literal text is shown
