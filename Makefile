@@ -1,5 +1,6 @@
+VERSION=1.0.0
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -Wno-unused-parameter -std=c99 -pedantic
+CFLAGS=-DVERSION='"$(VERSION)"' -Wall -Wextra -Werror -Wno-unused-parameter -std=c99 -pedantic
 LDFLAGS=-static
 INCLUDE=-Iinclude
 PREFIX=/usr/local
