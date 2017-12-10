@@ -150,19 +150,21 @@ static void parse_heading(struct parser *p) {
 	}
 }
 
-static int parse_indent(struct parser *p, int *indent) {
+static int parse_indent(struct parser *p, int *indent, bool write) {
 	int i = 0;
 	uint32_t ch;
 	while ((ch = parser_getch(p)) == '\t') {
 		++i;
 	}
 	parser_pushch(p, ch);
-	if (i == *indent - 1) {
-		roff_macro(p, "RE", NULL);
-	} else if (i == *indent + 1) {
-		roff_macro(p, "RS", "4", NULL);
-	} else if (i != *indent && ch == '\t') {
-		parser_fatal(p, "(De)indented by an amount greater than 1");
+	if (write) {
+		if (i == *indent - 1) {
+			roff_macro(p, "RE", NULL);
+		} else if (i == *indent + 1) {
+			roff_macro(p, "RS", "4", NULL);
+		} else if (i != *indent && ch == '\t') {
+			parser_fatal(p, "(De)indented by an amount greater than 1");
+		}
 	}
 	*indent = i;
 	return i;
@@ -176,7 +178,7 @@ static void parse_list(struct parser *p, int *indent) {
 	roff_macro(p, "IP", "\\(bu", "4", NULL);
 	parse_text(p);
 	do {
-		parse_indent(p, indent);
+		parse_indent(p, indent, true);
 		if ((ch = parser_getch(p)) == UTF8_INVALID) {
 			break;
 		}
@@ -199,11 +201,67 @@ static void parse_list(struct parser *p, int *indent) {
 	} while (ch != UTF8_INVALID);
 }
 
+static void parse_literal(struct parser *p, int *indent) {
+	uint32_t ch;
+	if ((ch = parser_getch(p)) != '`' ||
+		(ch = parser_getch(p)) != '`' ||
+		(ch = parser_getch(p)) != '\n') {
+		parser_fatal(p, "Expected ``` and a newline to begin literal block");
+	}
+	int stops = 0;
+	roff_macro(p, "nf", NULL);
+	roff_macro(p, "RS", "4", NULL);
+	do {
+		int _indent = *indent;
+		parse_indent(p, &_indent, false);
+		if (_indent < *indent) {
+			parser_fatal(p, "Cannot deindent in literal block");
+		}
+		while (_indent > *indent) {
+			--_indent;
+			fprintf(p->output, "\t");
+		}
+		if ((ch = parser_getch(p)) == UTF8_INVALID) {
+			break;
+		}
+		if (ch == '`') {
+			if (++stops == 3) {
+				if ((ch = parser_getch(p)) != '\n') {
+					parser_fatal(p, "Expected literal block to end with newline");
+				}
+				roff_macro(p, "fi", NULL);
+				roff_macro(p, "RE", NULL);
+				return;
+			}
+		} else {
+			stops = 0;
+			switch (ch) {
+			case '.':
+				fprintf(p->output, "\\&.");
+				break;
+			case '\\':
+				ch = parser_getch(p);
+				if (ch == UTF8_INVALID) {
+					parser_fatal(p, "Unexpected EOF");
+				} else if (ch == '\\') {
+					fprintf(p->output, "\\\\");
+				} else {
+					utf8_fputch(p->output, ch);
+				}
+				break;
+			default:
+				utf8_fputch(p->output, ch);
+				break;
+			}
+		}
+	} while (ch != UTF8_INVALID);
+}
+
 static void parse_document(struct parser *p) {
 	uint32_t ch;
 	int indent = 0;
 	do {
-		parse_indent(p, &indent);
+		parse_indent(p, &indent, true);
 		if ((ch = parser_getch(p)) == UTF8_INVALID) {
 			break;
 		}
@@ -218,6 +276,9 @@ static void parse_document(struct parser *p) {
 			break;
 		case '-':
 			parse_list(p, &indent);
+			break;
+		case '`':
+			parse_literal(p, &indent);
 			break;
 		case ' ':
 			parser_fatal(p, "Tabs are required for indentation");
