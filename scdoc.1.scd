@@ -92,7 +92,8 @@ _This formatting_ will *not* be interpreted by scdoc.
 
 These blocks will be indented one level. Note that literal text is shown
 literally in the man viewer - that is, it's not a means for inserting your own
-roff macros into the output.
+roff macros into the output. Note that \\ is still interpreted within literal
+blocks, which for example can be useful to output \``` inside of a literal block.
 
 # AUTHORS
 
