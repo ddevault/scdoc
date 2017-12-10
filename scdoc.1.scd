@@ -60,7 +60,7 @@ depth.
 
 ## LISTS
 
-You may start bulleted lists with dashes, like so:
+You may start bulleted lists with dashes (-), like so:
 
 ```
 - Item 1
@@ -94,6 +94,23 @@ level, plus two spaces. They will be rendered as a single list entry.
 - Item 2 is shorter
 	- But its children can go on
 	  for a while
+
+## NUMBERED LISTS
+
+Numbered lists are similar to normal lists, but begin with periods (.) instead
+of dashes (-), like so:
+
+```
+. Item 1
+. Item 2
+. Item 3,
+  with multiple lines
+```
+
+. Item 1
+. Item 2
+. Item 3,
+  with multiple lines
 
 ## LITERAL TEXT
 
