@@ -37,7 +37,6 @@ clean:
 	rm -rf .build scdoc
 
 install: all
-	mkdir -p $(DESTDIR)
 	install -Dm755 scdoc $(BINDIR)/scdoc
 	install -Dm644 scdoc.1 $(MANDIR)/man1/scdoc.1
 
