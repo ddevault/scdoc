@@ -321,7 +321,13 @@ static void parse_document(struct parser *p) {
 			parse_list(p, &indent, -1);
 			break;
 		case '.':
-			parse_list(p, &indent, 1);
+			if ((ch = parser_getch(p)) == ' ') {
+				parser_pushch(p, ch);
+				parse_list(p, &indent, 1);
+			} else {
+				parser_pushch(p, ch);
+				parse_text(p);
+			}
 			break;
 		case '`':
 			parse_literal(p, &indent);
