@@ -10,15 +10,15 @@ MANDIR=$(_INSTDIR)/share/man
 .DEFAULT_GOAL=all
 
 OBJECTS=\
-		.build/main.o \
-		.build/string.o \
-		.build/utf8_chsize.o \
-		.build/utf8_decode.o \
-		.build/utf8_encode.o \
-		.build/utf8_fgetch.o \
-		.build/utf8_fputch.o \
-		.build/utf8_size.o \
-		.build/util.o
+	.build/main.o \
+	.build/string.o \
+	.build/utf8_chsize.o \
+	.build/utf8_decode.o \
+	.build/utf8_encode.o \
+	.build/utf8_fgetch.o \
+	.build/utf8_fputch.o \
+	.build/utf8_size.o \
+	.build/util.o
 
 .build/%.o: src/%.c
 	@mkdir -p .build
