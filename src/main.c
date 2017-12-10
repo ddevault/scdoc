@@ -304,6 +304,8 @@ static void output_scdoc_preamble(struct parser *p) {
 	fprintf(p->output, ".el       .ds Aq '\n");
 	fprintf(p->output, ".\\\" Disable hyphenation:\n");
 	roff_macro(p, "nh", NULL);
+	fprintf(p->output, ".\\\" Disable justification:\n");
+	roff_macro(p, "ad l", NULL);
 	fprintf(p->output, ".\\\" Generated content:\n");
 }
 
