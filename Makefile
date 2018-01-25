@@ -7,21 +7,22 @@ DESTDIR=
 _INSTDIR=$(DESTDIR)$(PREFIX)
 BINDIR=$(_INSTDIR)/bin
 MANDIR=$(_INSTDIR)/share/man
+OUTDIR=.build
 .DEFAULT_GOAL=all
 
 OBJECTS=\
-	.build/main.o \
-	.build/string.o \
-	.build/utf8_chsize.o \
-	.build/utf8_decode.o \
-	.build/utf8_encode.o \
-	.build/utf8_fgetch.o \
-	.build/utf8_fputch.o \
-	.build/utf8_size.o \
-	.build/util.o
+	$(OUTDIR)/main.o \
+	$(OUTDIR)/string.o \
+	$(OUTDIR)/utf8_chsize.o \
+	$(OUTDIR)/utf8_decode.o \
+	$(OUTDIR)/utf8_encode.o \
+	$(OUTDIR)/utf8_fgetch.o \
+	$(OUTDIR)/utf8_fputch.o \
+	$(OUTDIR)/utf8_size.o \
+	$(OUTDIR)/util.o
 
-.build/%.o: src/%.c
-	@mkdir -p .build
+$(OUTDIR)/%.o: src/%.c
+	@mkdir -p $(OUTDIR)
 	$(CC) -std=c99 -pedantic -c -o $@ $(CFLAGS) $(INCLUDE) $<
 
 scdoc: $(OBJECTS)
@@ -33,7 +34,7 @@ scdoc.1: scdoc.1.scd scdoc
 all: scdoc scdoc.1
 
 clean:
-	rm -rf .build scdoc
+	rm -rf $(OUTDIR) scdoc
 
 install: all
 	install -Dm755 scdoc $(BINDIR)/scdoc
