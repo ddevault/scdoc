@@ -8,6 +8,7 @@ _INSTDIR=$(DESTDIR)$(PREFIX)
 BINDIR=$(_INSTDIR)/bin
 MANDIR=$(_INSTDIR)/share/man
 OUTDIR=.build
+HOST_SCDOC=./scdoc
 .DEFAULT_GOAL=all
 
 OBJECTS=\
@@ -28,13 +29,13 @@ $(OUTDIR)/%.o: src/%.c
 scdoc: $(OBJECTS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
-scdoc.1: scdoc.1.scd scdoc
-	./scdoc < $< > $@
+scdoc.1: scdoc.1.scd $(HOST_SCDOC)
+	$(HOST_SCDOC) < $< > $@
 
 all: scdoc scdoc.1
 
 clean:
-	rm -rf $(OUTDIR) scdoc
+	rm -rf $(OUTDIR) scdoc scdoc.1
 
 install: all
 	install -Dm755 scdoc $(BINDIR)/scdoc
