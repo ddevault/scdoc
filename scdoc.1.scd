@@ -112,6 +112,45 @@ of dashes (-), like so:
 . Item 3,
   with multiple lines
 
+## TABLES
+
+To begin a table, add an empty line followed by any number of rows.
+
+Each line of a table should start with | or : to start a new row or column
+respectively, followed by [ or - or ] to align the contents to the left,
+center, or right, followed by a space and the contents of that cell.  You may
+use a space instead of an alignment specifier to inherit the alignment of the
+same column in the previous row.
+
+The first character of the first row is not limited to | and has special
+meaning. [ will produce a table with borders around each cell. | will produce a
+table with no borders. ] will produce a table with one border around the whole
+table.
+
+To conclude your table, add an empty line after the last row.
+
+```
+[[ *Foo*
+:- _Bar_
+:- _Baz_
+|  *Row 1*
+:  Hello
+:] world!
+|  *Row 2*
+:  こんにちは
+:  世界
+```
+
+[[ *Foo*
+:- _Bar_
+:- _Baz_
+|  *Row 1*
+:  Hello
+:] world!
+|  *Row 2*
+:  こんにちは
+:  世界
+
 ## LITERAL TEXT
 
 You may turn off scdoc formatting and output literal text with escape codes and
