@@ -1,0 +1,34 @@
+#!/bin/sh
+. test/lib.sh
+
+begin "Disallows nested formatting"
+scdoc <<EOF >/dev/null
+test(8)
+
+_hello *world*_
+EOF
+end 1
+
+begin "Emits bold text"
+scdoc <<EOF | grep '^hello \\fBworld\\fR' >/dev/null
+test(8)
+
+hello *world*
+EOF
+end 0
+
+begin "Emits underlined text"
+scdoc <<EOF | grep '^hello \\fIworld\\fR' >/dev/null
+test(8)
+
+hello _world_
+EOF
+end 0
+
+begin "Handles escaped characters"
+scdoc <<EOF | grep '^hello _world_' >/dev/null
+test(8)
+
+hello \_world\_
+EOF
+end 0

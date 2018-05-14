@@ -1,3 +1,6 @@
+printf '== %s\n' "$0"
+trap "printf '\n'" EXIT
+
 begin() {
 	printf '%-40s' "$1"
 }
