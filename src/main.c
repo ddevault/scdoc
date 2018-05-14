@@ -47,7 +47,7 @@ static void parse_preamble(struct parser *p) {
 	struct tm *now_tm = localtime(&now);
 	strftime(date, sizeof(date), "%F", now_tm);
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
-		if (ch < 0x80 && isalnum(ch)) {
+		if ((ch < 0x80 && isalnum(ch)) || ch == '_' || ch == '-') {
 			assert(str_append_ch(name, ch) != -1);
 		} else if (ch == '(') {
 			section = parse_section(p);

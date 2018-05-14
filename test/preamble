@@ -15,7 +15,7 @@ end 1
 
 begin "Expects name to alphanumeric"
 scdoc <<EOF >/dev/null
-____(8)
+!!!!(8)
 EOF
 end 1
 
@@ -40,5 +40,11 @@ end 0
 begin "Writes the appropriate header"
 scdoc <<EOF | grep '^\.TH "test" "8" "'"$(date +'%F')"'"' >/dev/null
 test(8)
+EOF
+end 0
+
+begin "Preserves dashes"
+scdoc <<EOF | grep '^\.TH "test-manual" "8" "'"$(date +'%F')"'"' >/dev/null
+test-manual(8)
 EOF
 end 0
