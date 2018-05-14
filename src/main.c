@@ -491,6 +491,14 @@ static void parse_document(struct parser *p) {
 			break;
 		}
 		switch (ch) {
+		case ';':
+			if ((ch = parser_getch(p)) != ' ') {
+				parser_fatal(p, "Expected space after ; to begin comment");
+			}
+			do {
+				ch = parser_getch(p);
+			} while (ch != UTF8_INVALID && ch != '\n');
+			break;
 		case '#':
 			if (indent != 0) {
 				parser_pushch(p, ch);

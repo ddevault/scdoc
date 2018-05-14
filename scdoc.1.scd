@@ -169,6 +169,14 @@ literally in the man viewer - that is, it's not a means for inserting your own
 roff macros into the output. Note that \\ is still interpreted within literal
 blocks, which for example can be useful to output \``` inside of a literal block.
 
+## COMMENTS
+
+Lines beginning with ; and a space are ignored.
+
+```
+; This is a comment
+```
+
 # AUTHORS
 
 Maintained by Drew DeVault <sir@cmpwn.com>. Up-to-date sources can be found at
