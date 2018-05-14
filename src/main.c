@@ -478,7 +478,7 @@ commit_table:
 	}
 
 	roff_macro(p, "TE", NULL);
-	roff_macro(p, "sp", "1", NULL);
+	fprintf(p->output, ".sp 1\n");
 	roff_macro(p, "RE", NULL);
 }
 
