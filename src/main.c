@@ -169,7 +169,7 @@ static int parse_indent(struct parser *p, int *indent, bool write) {
 				roff_macro(p, "RE", NULL);
 			}
 		} else if (i == *indent + 1) {
-			roff_macro(p, "RS", "4", NULL);
+			fprintf(p->output, ".RS 4\n");
 		} else if (i != *indent && ch == '\t') {
 			parser_fatal(p, "Indented by an amount greater than 1");
 		}
@@ -179,7 +179,7 @@ static int parse_indent(struct parser *p, int *indent, bool write) {
 }
 
 static void list_header(struct parser *p, int *num) {
-	roff_macro(p, "RS", "4", NULL);
+	fprintf(p->output, ".RS 4\n");
 	fprintf(p->output, ".ie n \\{\\\n");
 	if (*num == -1) {
 		fprintf(p->output, "\\h'-0%d'%s\\h'+03'\\c\n",
@@ -252,7 +252,7 @@ static void parse_literal(struct parser *p, int *indent) {
 	}
 	int stops = 0;
 	roff_macro(p, "nf", NULL);
-	roff_macro(p, "RS", "4", NULL);
+	fprintf(p->output, ".RS 4\n");
 	do {
 		int _indent = *indent;
 		parse_indent(p, &_indent, false);
@@ -479,7 +479,6 @@ commit_table:
 
 	roff_macro(p, "TE", NULL);
 	fprintf(p->output, ".sp 1\n");
-	roff_macro(p, "RE", NULL);
 }
 
 static void parse_document(struct parser *p) {
