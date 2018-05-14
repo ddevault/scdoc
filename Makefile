@@ -41,4 +41,7 @@ install: all
 	install -Dm755 scdoc $(BINDIR)/scdoc
 	install -Dm644 scdoc.1 $(MANDIR)/man1/scdoc.1
 
-.PHONY: all clean install
+check: scdoc scdoc.1
+	@find test -executable -exec '{}' \;
+
+.PHONY: all clean install check

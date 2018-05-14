@@ -1,0 +1,44 @@
+#!/bin/sh
+. test/lib.sh
+
+begin "Expects a name"
+scdoc <<EOF >/dev/null
+(8)
+EOF
+end 1
+
+begin "Expects a section"
+scdoc <<EOF >/dev/null
+test
+EOF
+end 1
+
+begin "Expects name to alphanumeric"
+scdoc <<EOF >/dev/null
+____(8)
+EOF
+end 1
+
+begin "Expects section to be a number"
+scdoc <<EOF >/dev/null
+test(hello)
+EOF
+end 1
+
+begin "Expects section to legit"
+scdoc <<EOF >/dev/null
+test(100)
+EOF
+end 1
+
+begin "Accepts a valid preamble"
+scdoc <<EOF >/dev/null
+test(8)
+EOF
+end 0
+
+begin "Writes the appropriate header"
+scdoc <<EOF | grep '^\.TH "test" "8" "'"$(date +'%F')"'"' >/dev/null
+test(8)
+EOF
+end 0
