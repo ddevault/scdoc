@@ -425,20 +425,14 @@ commit_table:
 
 	roff_macro(p, "TS", NULL);
 
-	const char *_style = NULL;
 	switch (style) {
 	case '[':
-		_style = "allbox ";
-		break;
-	case '|':
-		_style = "";
+		fprintf(p->output, "allbox;");
 		break;
 	case ']':
-		_style = "box ";
+		fprintf(p->output, "box;");
 		break;
 	}
-
-	fprintf(p->output, "%s tab(:);\n", _style);
 
 	// Print alignments first
 	currow = table;
@@ -462,7 +456,7 @@ commit_table:
 			parser_pushstr(p, curcell->contents->str);
 			parse_text(p);
 			if (curcell->next) {
-				fprintf(p->output, "\nT}:T{\n");
+				fprintf(p->output, "\nT}\tT{\n");
 			} else {
 				fprintf(p->output, "\nT}");
 			}
