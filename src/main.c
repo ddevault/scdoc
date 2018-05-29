@@ -22,8 +22,8 @@ static int parse_section(struct parser *p) {
 				break;
 			}
 			int sec = strtol(section->str, NULL, 10);
-			if (sec < 1 || sec > 9) {
-				parser_fatal(p, "Expected section between 1 and 9");
+			if (sec < 0 || sec > 9) {
+				parser_fatal(p, "Expected section between 0 and 9");
 				break;
 			}
 			str_free(section);
