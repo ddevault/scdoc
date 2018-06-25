@@ -1,12 +1,11 @@
 VERSION=1.3.4
-CFLAGS=-g -DVERSION='"$(VERSION)"' -Wall -Wextra -Werror -Wno-unused-parameter
-LDFLAGS=-static
-INCLUDE=-Iinclude
-PREFIX=/usr/local
-DESTDIR=
+CFLAGS+=-g -DVERSION='"$(VERSION)"' -Wall -Wextra -Werror -Wno-unused-parameter
+LDFLAGS+=-static
+INCLUDE+=-Iinclude
+PREFIX?=/usr/local
 _INSTDIR=$(DESTDIR)$(PREFIX)
-BINDIR=$(_INSTDIR)/bin
-MANDIR=$(_INSTDIR)/share/man
+BINDIR?=$(_INSTDIR)/bin
+MANDIR?=$(_INSTDIR)/share/man
 OUTDIR=.build
 HOST_SCDOC=./scdoc
 .DEFAULT_GOAL=all
