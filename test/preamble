@@ -48,3 +48,21 @@ scdoc <<EOF | grep '^\.TH "test-manual" "8" "'"$(date +'%F')"'"' >/dev/null
 test-manual(8)
 EOF
 end 0
+
+begin "Handles extra footer field"
+scdoc <<EOF | grep '^\.TH "test-manual" "8" "'"$(date +'%F')"'" "Footer"' >/dev/null
+test-manual(8) "Footer"
+EOF
+end 0
+
+begin "Handles both extra fields"
+scdoc <<EOF | grep '^\.TH "test-manual" "8" "'"$(date +'%F')"'" "Footer" "Header"' >/dev/null
+test-manual(8) "Footer" "Header"
+EOF
+end 0
+
+begin "Emits empty footer correctly"
+scdoc <<EOF | grep '^\.TH "test-manual" "8" "'"$(date +'%F')"'" "" "Header"' >/dev/null
+test-manual(8) "" "Header"
+EOF
+end 0

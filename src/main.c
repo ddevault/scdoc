@@ -37,8 +37,31 @@ static int parse_section(struct parser *p) {
 	return -1;
 }
 
+static str_t *parse_extra(struct parser *p) {
+	str_t *extra = str_create();
+	int ret = str_append_ch(extra, '"');
+	assert(ret != -1);
+	uint32_t ch;
+	while ((ch = parser_getch(p)) != UTF8_INVALID) {
+		if (ch == '"') {
+			ret = str_append_ch(extra, ch);
+			assert(ret != -1);
+			return extra;
+		} else if (ch == '\n') {
+			parser_fatal(p, "Unclosed extra preamble field");
+			break;
+		} else {
+			ret = str_append_ch(extra, ch);
+			assert(ret != -1);
+		}
+	}
+	return NULL;
+}
+
 static void parse_preamble(struct parser *p) {
 	str_t *name = str_create();
+	int ex = 0;
+	str_t *extras[2] = { NULL };
 	int section = -1;
 	uint32_t ch;
 	char date[256];
@@ -51,6 +74,11 @@ static void parse_preamble(struct parser *p) {
 			assert(str_append_ch(name, ch) != -1);
 		} else if (ch == '(') {
 			section = parse_section(p);
+		} else if (ch == '"') {
+			if (ex == 2) {
+				parser_fatal(p, "Too many extra preamble fields");
+			}
+			extras[ex++] = parse_extra(p);
 		} else if (ch == '\n') {
 			if (name->len == 0) {
 				parser_fatal(p, "Expected preamble");
@@ -59,11 +87,26 @@ static void parse_preamble(struct parser *p) {
 				parser_fatal(p, "Expected manual section");
 			}
 			char sec[2] = { '0' + section, 0 };
-			roff_macro(p, "TH", name->str, sec, date, NULL);
+			char *ex2 = extras[0] != NULL ? extras[0]->str : NULL;
+			char *ex3 = extras[1] != NULL ? extras[1]->str : NULL;
+			fprintf(p->output, ".TH \"%s\" \"%s\" \"%s\"", name->str, sec, date);
+			/* ex2 and ex3 are already double-quoted */
+			if (ex2) {
+				fprintf(p->output, " %s", ex2);
+			}
+			if (ex3) {
+				fprintf(p->output, " %s", ex3);
+			}
+			fprintf(p->output, "\n");
 			break;
 		}
 	}
 	str_free(name);
+	for (int i = 0; i < 2; ++i) {
+		if (extras[i] != NULL) {
+			str_free(extras[i]);
+		}
+	}
 }
 
 static void parse_format(struct parser *p, enum formatting fmt) {
