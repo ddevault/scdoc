@@ -55,6 +55,7 @@ static str_t *parse_extra(struct parser *p) {
 			assert(ret != -1);
 		}
 	}
+	str_free(extra);
 	return NULL;
 }
 
