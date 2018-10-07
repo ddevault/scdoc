@@ -578,6 +578,15 @@ static void parse_document(struct parser *p) {
 			parser_fatal(p, "Tabs are required for indentation");
 			break;
 		case '\n':
+			if (p->flags) {
+				char error[512];
+				snprintf(error, sizeof(error), "Expected %c before starting "
+						"new paragraph (began with %c at %d:%d)",
+						p->flags == FORMAT_BOLD ? '*' : '_',
+						p->flags == FORMAT_BOLD ? '*' : '_',
+						p->fmt_line, p->fmt_col);
+				parser_fatal(p, error);
+			}
 			roff_macro(p, "P", NULL);
 			break;
 		default:
