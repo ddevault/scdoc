@@ -115,13 +115,20 @@ static void parse_format(struct parser *p, enum formatting fmt) {
 		[FORMAT_BOLD] = 'B',
 		[FORMAT_UNDERLINE] = 'I',
 	};
+	char error[512];
 	if (p->flags) {
 		if ((p->flags & ~fmt)) {
-			parser_fatal(p, "Cannot nest inline formatting.");
+			snprintf(error, sizeof(error), "Cannot nest inline formatting "
+						"(began with %c at %d:%d)",
+					p->flags == FORMAT_BOLD ? '*' : '_',
+					p->fmt_line, p->fmt_col);
+			parser_fatal(p, error);
 		}
 		fprintf(p->output, "\\fR");
 	} else {
 		fprintf(p->output, "\\f%c", formats[fmt]);
+		p->fmt_line = p->line;
+		p->fmt_col = p->col;
 	}
 	p->flags ^= fmt;
 }
