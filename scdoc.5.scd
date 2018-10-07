@@ -35,6 +35,13 @@ an empty line on either side.
 
 Begin a new paragraph with an empty line.
 
+## LINE BREAKS
+
+Insert a line break by ending a line with \+\+.
+
+The result looks++
+like this.
+
 ## FORMATTING
 
 Text can be made *bold* or _underlined_ with asterisks and underscores: \*bold\*

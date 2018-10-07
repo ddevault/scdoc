@@ -133,6 +133,29 @@ static void parse_format(struct parser *p, enum formatting fmt) {
 	p->flags ^= fmt;
 }
 
+static void parse_linebreak(struct parser *p) {
+	uint32_t plus = parser_getch(p);
+	if (plus != '+') {
+		fprintf(p->output, "+");
+		parser_pushch(p, plus);
+		return;
+	}
+	uint32_t lf = parser_getch(p);
+	if (lf != '\n') {
+		fprintf(p->output, "+");
+		parser_pushch(p, plus);
+		parser_pushch(p, '\n');
+		return;
+	}
+	uint32_t ch = parser_getch(p);
+	if (ch == '\n') {
+		parser_fatal(
+				p, "Explicit line breaks cannot be followed by a blank line");
+	}
+	parser_pushch(p, ch);
+	fprintf(p->output, "\n.br\n");
+}
+
 static void parse_text(struct parser *p) {
 	uint32_t ch;
 	int i = 0;
@@ -153,6 +176,9 @@ static void parse_text(struct parser *p) {
 			break;
 		case '_':
 			parse_format(p, FORMAT_UNDERLINE);
+			break;
+		case '+':
+			parse_linebreak(p);
 			break;
 		case '\n':
 			utf8_fputch(p->output, ch);
