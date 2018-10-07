@@ -31,16 +31,20 @@ scdoc: $(OBJECTS)
 scdoc.1: scdoc.1.scd $(HOST_SCDOC)
 	$(HOST_SCDOC) < $< > $@
 
+scdoc.5: scdoc.5.scd $(HOST_SCDOC)
+	$(HOST_SCDOC) < $< > $@
+
 all: scdoc scdoc.1
 
 clean:
-	rm -rf $(OUTDIR) scdoc scdoc.1
+	rm -rf $(OUTDIR) scdoc scdoc.1 scdoc.5
 
 install: all
 	install -Dm755 scdoc $(BINDIR)/scdoc
 	install -Dm644 scdoc.1 $(MANDIR)/man1/scdoc.1
+	install -Dm644 scdoc.5 $(MANDIR)/man5/scdoc.5
 
-check: scdoc scdoc.1
+check: scdoc scdoc.1 scdoc.5
 	@find test -perm -111 -exec '{}' \;
 
 .PHONY: all clean install check
