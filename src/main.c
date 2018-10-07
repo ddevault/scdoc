@@ -608,7 +608,7 @@ static void output_scdoc_preamble(struct parser *p) {
 	roff_macro(p, "nh", NULL);
 	// Disable justification:
 	roff_macro(p, "ad l", NULL);
-	fprintf(p->output, ".\\\" Generated content:\n");
+	fprintf(p->output, ".\\\" Begin generated content:\n");
 }
 
 int main(int argc, char **argv) {
