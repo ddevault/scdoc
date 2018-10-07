@@ -34,7 +34,7 @@ scdoc.1: scdoc.1.scd $(HOST_SCDOC)
 scdoc.5: scdoc.5.scd $(HOST_SCDOC)
 	$(HOST_SCDOC) < $< > $@
 
-all: scdoc scdoc.1
+all: scdoc scdoc.1 scdoc.5
 
 clean:
 	rm -rf $(OUTDIR) scdoc scdoc.1 scdoc.5
