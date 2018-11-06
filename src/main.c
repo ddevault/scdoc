@@ -16,7 +16,8 @@ static int parse_section(struct parser *p) {
 	uint32_t ch;
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
 		if (ch < 0x80 && isdigit(ch)) {
-			assert(str_append_ch(section, ch) != -1);
+			int ret = str_append_ch(section, ch);
+			assert(ret != -1);
 		} else if (ch == ')') {
 			if (!section->str) {
 				break;
@@ -72,7 +73,8 @@ static void parse_preamble(struct parser *p) {
 	strftime(date, sizeof(date), "%F", now_tm);
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
 		if ((ch < 0x80 && isalnum(ch)) || ch == '_' || ch == '-' || ch == '.') {
-			assert(str_append_ch(name, ch) != -1);
+			int ret = str_append_ch(name, ch);
+			assert(ret != -1);
 		} else if (ch == '(') {
 			section = parse_section(p);
 		} else if (ch == '"') {
@@ -482,8 +484,9 @@ static void parse_table(struct parser *p, uint32_t style) {
 			switch (ch) {
 			case '\n':
 				goto commit_cell;
-			default:
-				assert(str_append_ch(curcell->contents, ch) != -1);
+			default:;
+				int ret = str_append_ch(curcell->contents, ch);
+				assert(ret != -1);
 				break;
 			}
 		}
