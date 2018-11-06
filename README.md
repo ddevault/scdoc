@@ -18,4 +18,4 @@ See scdoc(1)
 
 ## Contributing
 
-Send patches/bug reports to sir@cmpwn.com
+Send patches/bug reports to ~sircmpwn/public-inbox@lists.sr.ht
