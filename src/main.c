@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE
 #include <assert.h>
 #include <ctype.h>
 #include <stdbool.h>
@@ -67,10 +68,22 @@ static void parse_preamble(struct parser *p) {
 	int section = -1;
 	uint32_t ch;
 	char date[256];
-	time_t now;
-	time(&now);
-	struct tm *now_tm = localtime(&now);
-	strftime(date, sizeof(date), "%F", now_tm);
+	char *source_date_epoch = getenv("SOURCE_DATE_EPOCH");
+	if (source_date_epoch != NULL) {
+		struct tm source_date_epoch_tm;
+		char *ret = strptime(source_date_epoch, "%s", &source_date_epoch_tm);
+		if (ret == NULL || *ret != '\0') {
+			fprintf(stderr,
+					"Error: $SOURCE_DATE_EPOCH is set but malformed.\n");
+			exit(1);
+		}
+		strftime(date, sizeof(date), "%F", &source_date_epoch_tm);
+	} else {
+		time_t now;
+		time(&now);
+		struct tm *now_tm = localtime(&now);
+		strftime(date, sizeof(date), "%F", now_tm);
+	}
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
 		if ((ch < 0x80 && isalnum(ch)) || ch == '_' || ch == '-' || ch == '.') {
 			int ret = str_append_ch(name, ch);
