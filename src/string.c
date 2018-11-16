@@ -3,15 +3,6 @@
 #include "string.h"
 #include "unicode.h"
 
-static void sanity_check(str_t *str) {
-	if (str->str == NULL) {
-		str->str = malloc(16);
-		str->size = 16;
-		str->len = 0;
-		str->str[0] = '\0';
-	}
-}
-
 static int ensure_capacity(str_t *str, size_t len) {
 	if (len + 1 >= str->size) {
 		char *new = realloc(str->str, str->size * 2);
@@ -25,7 +16,12 @@ static int ensure_capacity(str_t *str, size_t len) {
 }
 
 str_t *str_create() {
-	return calloc(sizeof(str_t), 1);
+	str_t *str = calloc(sizeof(str_t), 1);
+	str->str = malloc(16);
+	str->size = 16;
+	str->len = 0;
+	str->str[0] = '\0';
+	return str;
 }
 
 void str_free(str_t *str) {
@@ -39,7 +35,6 @@ int str_append_ch(str_t *str, uint32_t ch) {
 	if (size <= 0) {
 		return -1;
 	}
-	sanity_check(str);
 	if (!ensure_capacity(str, str->len + size)) {
 		return -1;
 	}
