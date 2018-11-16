@@ -487,21 +487,26 @@ static void parse_table(struct parser *p, uint32_t style) {
 			parser_fatal(p, "Expected one of '[', '-', ']', or ' '");
 			break;
 		}
-		if ((ch = parser_getch(p)) != ' ') {
-			parser_fatal(p, "Expected ' '");
-			break;
-		}
-		// Read out remainder of the text
 		curcell->contents = str_create();
-		while ((ch = parser_getch(p)) != UTF8_INVALID) {
-			switch (ch) {
-			case '\n':
-				goto commit_cell;
-			default:;
-				int ret = str_append_ch(curcell->contents, ch);
-				assert(ret != -1);
-				break;
+		switch (ch = parser_getch(p)) {
+		case ' ':
+			// Read out remainder of the text
+			while ((ch = parser_getch(p)) != UTF8_INVALID) {
+				switch (ch) {
+				case '\n':
+					goto commit_cell;
+				default:;
+					int ret = str_append_ch(curcell->contents, ch);
+					assert(ret != -1);
+					break;
+				}
 			}
+			break;
+		case '\n':
+			goto commit_cell;
+		default:
+			parser_fatal(p, "Expected ' ' or a newline");
+			break;
 		}
 commit_cell:
 		if (strstr(curcell->contents->str, "T{")

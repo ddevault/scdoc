@@ -133,7 +133,7 @@ To conclude your table, add an empty line after the last row.
 ```
 [[ *Foo*
 :- _Bar_
-:- _Baz_
+:-
 |  *Row 1*
 :  Hello
 :] world!
@@ -144,7 +144,7 @@ To conclude your table, add an empty line after the last row.
 
 [[ *Foo*
 :- _Bar_
-:- _Baz_
+:-
 |  *Row 1*
 :  Hello
 :] world!
