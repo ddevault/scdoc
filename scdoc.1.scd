@@ -2,18 +2,16 @@ scdoc(1)
 
 # NAME
 
-scdoc - tool for generating *roff*(7) manual pages
+scdoc - generate *man*(7) manual pages
 
 # SYNOPSIS
 
-*scdoc* < _input_ > _output_
+*scdoc* < _input_
 
 # DESCRIPTION
 
-scdoc is a tool designed to make the process of writing man pages more
-friendly. It reads scdoc syntax from stdin and writes roff to stdout, suitable
-for reading with *man*(1). For a description of the syntax of scdoc source
-files, see *scdoc*(5).
+The scdoc utility reads *scdoc*(5) syntax from the standard input and writes
+*man*(7) style roff to the standard output.
 
 # SEE ALSO
 

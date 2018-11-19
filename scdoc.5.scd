@@ -14,7 +14,7 @@ Each scdoc file must begin with the following preamble:
 
 	*name*(_section_) ["left\_footer" ["center\_header"]]
 
-The *name* is the name of the man page you are writing, and _section_ is the
+*name* is the name of the man page you are writing, and _section_ is the
 section you're writing for (see *man*(1) for information on manual sections).
 
 _left\_footer_ and _center\_header_ are optional arguments which set the text
