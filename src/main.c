@@ -1,4 +1,4 @@
-#define _XOPEN_SOURCE
+#define _XOPEN_SOURCE 600
 #include <assert.h>
 #include <ctype.h>
 #include <stdbool.h>
