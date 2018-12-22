@@ -1,6 +1,6 @@
 # scdoc
 
-scdoc is a simple man page generator written for POSIX systems written in C99.
+scdoc is a simple man page generator POSIX systems written in C99.
 
 ## Installation
 
