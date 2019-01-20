@@ -14,12 +14,12 @@ Each scdoc file must begin with the following preamble:
 
 	*name*(_section_) ["left\_footer" ["center\_header"]]
 
-*name* is the name of the man page you are writing, and _section_ is the
-section you're writing for (see *man*(1) for information on manual sections).
+*name* is the name of the man page you are writing, and _section_ is the section
+you're writing for (see *man*(1) for information on manual sections).
 
 _left\_footer_ and _center\_header_ are optional arguments which set the text
-positioned at those locations in the generated man page, and *must* be surrounded
-with double quotes.
+positioned at those locations in the generated man page, and *must* be
+surrounded with double quotes.
 
 ## SECTION HEADERS
 
@@ -118,10 +118,10 @@ of dashes (-), like so:
 To begin a table, add an empty line followed by any number of rows.
 
 Each line of a table should start with | or : to start a new row or column
-respectively, followed by [ or - or ] to align the contents to the left,
-center, or right, followed by a space and the contents of that cell.  You may
-use a space instead of an alignment specifier to inherit the alignment of the
-same column in the previous row.
+respectively, followed by [ or - or ] to align the contents to the left, center,
+or right, followed by a space and the contents of that cell.  You may use a
+space instead of an alignment specifier to inherit the alignment of the same
+column in the previous row.
 
 The first character of the first row is not limited to | and has special
 meaning. [ will produce a table with borders around each cell. | will produce a
@@ -168,7 +168,8 @@ _This formatting_ will *not* be interpreted by scdoc.
 These blocks will be indented one level. Note that literal text is shown
 literally in the man viewer - that is, it's not a means for inserting your own
 roff macros into the output. Note that \\ is still interpreted within literal
-blocks, which for example can be useful to output \``` inside of a literal block.
+blocks, which for example can be useful to output \``` inside of a literal
+block.
 
 ## COMMENTS
 
@@ -177,6 +178,10 @@ Lines beginning with ; and a space are ignored.
 ```
 ; This is a comment
 ```
+
+# CONVENTIONS
+
+By convention, all scdoc documents should be hard wrapped at 80 columns.
 
 # SEE ALSO
 
