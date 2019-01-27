@@ -1,4 +1,4 @@
-VERSION=1.7.0
+VERSION=1.7.1
 CFLAGS+=-g -DVERSION='"$(VERSION)"' -Wall -Wextra -Werror -Wno-unused-parameter
 LDFLAGS+=-static
 INCLUDE+=-Iinclude
