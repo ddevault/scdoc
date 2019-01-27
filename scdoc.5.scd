@@ -45,7 +45,7 @@ like this.
 ## FORMATTING
 
 Text can be made *bold* or _underlined_ with asterisks and underscores: \*bold\*
-or \_underlined\_.
+or \_underlined\_. Underscores in the_middle_of_words will be disregarded.
 
 ## INDENTATION
 

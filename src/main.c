@@ -163,6 +163,11 @@ static void parse_format(struct parser *p, enum formatting fmt) {
 		}
 		fprintf(p->output, "\\fR");
 	} else {
+		if (fmt == FORMAT_UNDERLINE && !isspace(p->last[0])) {
+			// Ignore underscores in the middle of words
+			utf8_fputch(p->output, '_');
+			return;
+		}
 		fprintf(p->output, "\\f%c", formats[fmt]);
 		p->fmt_line = p->line;
 		p->fmt_col = p->col;
