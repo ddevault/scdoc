@@ -14,26 +14,24 @@ void parser_fatal(struct parser *parser, const char *err) {
 }
 
 uint32_t parser_getch(struct parser *parser) {
-	uint32_t ch = 0;
 	if (parser->qhead) {
-		ch = parser->queue[--parser->qhead];
-	} else if (parser->str) {
+		return parser->queue[--parser->qhead];
+	}
+	if (parser->str) {
 		uint32_t ch = utf8_decode(&parser->str);
 		if (!ch || ch == UTF8_INVALID) {
 			parser->str = NULL;
 			return UTF8_INVALID;
 		}
-	} else {
-		ch = utf8_fgetch(parser->input);
-		if (ch == '\n') {
-			parser->col = 0;
-			++parser->line;
-		} else {
-			++parser->col;
-		}
+		return ch;
 	}
-	parser->last[0] = parser->last[1];
-	parser->last[1] = ch;
+	uint32_t ch = utf8_fgetch(parser->input);
+	if (ch == '\n') {
+		parser->col = 0;
+		++parser->line;
+	} else {
+		++parser->col;
+	}
 	return ch;
 }
 

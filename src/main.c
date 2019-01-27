@@ -163,11 +163,6 @@ static void parse_format(struct parser *p, enum formatting fmt) {
 		}
 		fprintf(p->output, "\\fR");
 	} else {
-		if (fmt == FORMAT_UNDERLINE && !isspace(p->last[0])) {
-			// Ignore underscores in the middle of words
-			utf8_fputch(p->output, '_');
-			return;
-		}
 		fprintf(p->output, "\\f%c", formats[fmt]);
 		p->fmt_line = p->line;
 		p->fmt_col = p->col;
@@ -199,7 +194,7 @@ static void parse_linebreak(struct parser *p) {
 }
 
 static void parse_text(struct parser *p) {
-	uint32_t ch;
+	uint32_t ch, last = ' ';
 	int i = 0;
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
 		switch (ch) {
@@ -217,7 +212,13 @@ static void parse_text(struct parser *p) {
 			parse_format(p, FORMAT_BOLD);
 			break;
 		case '_':
-			parse_format(p, FORMAT_UNDERLINE);
+			if ((p->flags & FORMAT_UNDERLINE)) {
+				parse_format(p, FORMAT_UNDERLINE);
+			} else if (!p->flags && isspace(last)) {
+				parse_format(p, FORMAT_UNDERLINE);
+			} else {
+				utf8_fputch(p->output, ch);
+			}
 			break;
 		case '+':
 			parse_linebreak(p);
@@ -233,6 +234,7 @@ static void parse_text(struct parser *p) {
 			}
 			/* fallthrough */
 		default:
+			last = ch;
 			utf8_fputch(p->output, ch);
 			break;
 		}

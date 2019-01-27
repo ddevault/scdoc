@@ -12,7 +12,6 @@ struct parser {
 	uint32_t flags;
 	const char *str;
 	int fmt_line, fmt_col;
-	uint32_t last[2];
 };
 
 enum formatting {
