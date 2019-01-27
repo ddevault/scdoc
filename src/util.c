@@ -14,7 +14,7 @@ void parser_fatal(struct parser *parser, const char *err) {
 }
 
 uint32_t parser_getch(struct parser *parser) {
-	uint32_t ch;
+	uint32_t ch = 0;
 	if (parser->qhead) {
 		ch = parser->queue[--parser->qhead];
 	} else if (parser->str) {
