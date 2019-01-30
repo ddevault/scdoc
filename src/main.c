@@ -212,9 +212,7 @@ static void parse_text(struct parser *p) {
 			parse_format(p, FORMAT_BOLD);
 			break;
 		case '_':
-			if ((p->flags & FORMAT_UNDERLINE)) {
-				parse_format(p, FORMAT_UNDERLINE);
-			} else if (!p->flags && isspace(last)) {
+			if (!isalnum(last) || (p->flags & FORMAT_UNDERLINE)) {
 				parse_format(p, FORMAT_UNDERLINE);
 			} else {
 				utf8_fputch(p->output, ch);
