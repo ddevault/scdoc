@@ -6,9 +6,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
-#include "string.h"
+#include "str.h"
 #include "unicode.h"
 #include "util.h"
 
@@ -686,7 +687,10 @@ static void output_scdoc_preamble(struct parser *p) {
 }
 
 int main(int argc, char **argv) {
-	if (argc > 1) {
+	if (argc == 2 && strcmp(argv[1], "-v") == 0) {
+		printf("scdoc " VERSION "\n");
+		return 0;
+	} else if (argc > 1) {
 		fprintf(stderr, "Usage: scdoc < input.scd > output.roff\n");
 		return 1;
 	}

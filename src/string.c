@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdint.h>
-#include "string.h"
+#include "str.h"
 #include "unicode.h"
 
 static int ensure_capacity(str_t *str, size_t len) {

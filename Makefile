@@ -6,6 +6,7 @@ PREFIX?=/usr/local
 _INSTDIR=$(DESTDIR)$(PREFIX)
 BINDIR?=$(_INSTDIR)/bin
 MANDIR?=$(_INSTDIR)/share/man
+PCDIR?=$(_INSTDIR)/lib/pkgconfig
 OUTDIR=.build
 HOST_SCDOC=./scdoc
 .DEFAULT_GOAL=all
@@ -43,6 +44,7 @@ install: all
 	install -Dm755 scdoc $(BINDIR)/scdoc
 	install -Dm644 scdoc.1 $(MANDIR)/man1/scdoc.1
 	install -Dm644 scdoc.5 $(MANDIR)/man5/scdoc.5
+	install -Dm644 scdoc.pc $(PCDIR)/scdoc.pc
 
 check: scdoc scdoc.1 scdoc.5
 	@find test -perm -111 -exec '{}' \;
