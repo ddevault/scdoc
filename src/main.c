@@ -481,6 +481,8 @@ static void parse_table(struct parser *p, uint32_t style) {
 				++column;
 			}
 			break;
+		case ' ':
+			goto continue_cell;
 		default:
 			parser_fatal(p, "Expected either '|' or ':'");
 			break;
@@ -516,6 +518,7 @@ static void parse_table(struct parser *p, uint32_t style) {
 			break;
 		}
 		curcell->contents = str_create();
+continue_cell:
 		switch (ch = parser_getch(p)) {
 		case ' ':
 			// Read out remainder of the text

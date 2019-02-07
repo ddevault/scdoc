@@ -118,10 +118,11 @@ of dashes (-), like so:
 To begin a table, add an empty line followed by any number of rows.
 
 Each line of a table should start with | or : to start a new row or column
-respectively, followed by [ or - or ] to align the contents to the left, center,
-or right, followed by a space and the contents of that cell.  You may use a
-space instead of an alignment specifier to inherit the alignment of the same
-column in the previous row.
+respectively (or space to continue the previous cell on multiple lines),
+followed by [ or - or ] to align the contents to the left, center, or right,
+followed by a space and the contents of that cell.  You may use a space instead
+of an alignment specifier to inherit the alignment of the same column in the
+previous row.
 
 The first character of the first row is not limited to | and has special
 meaning. [ will produce a table with borders around each cell. | will produce a
@@ -140,6 +141,7 @@ To conclude your table, add an empty line after the last row.
 |  *Row 2*
 :  こんにちは
 :  世界
+   !
 ```
 
 [[ *Foo*
@@ -151,6 +153,7 @@ To conclude your table, add an empty line after the last row.
 |  *Row 2*
 :  こんにちは
 :  世界
+   !
 
 ## LITERAL TEXT
 
