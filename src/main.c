@@ -105,7 +105,7 @@ static void parse_preamble(struct parser *p) {
 	} else {
 		date_time = time(NULL);
 	}
-	struct tm *date_tm = localtime(&date_time);
+	struct tm *date_tm = gmtime(&date_time);
 	strftime(date, sizeof(date), "%F", date_tm);
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
 		if ((ch < 0x80 && isalnum(ch)) || ch == '_' || ch == '-' || ch == '.') {
