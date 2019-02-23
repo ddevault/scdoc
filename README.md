@@ -18,4 +18,6 @@ See scdoc(1)
 
 ## Contributing
 
-Send patches/bug reports to ~sircmpwn/public-inbox@lists.sr.ht
+Send patches/bug reports to [~sircmpwn/public-inbox@lists.sr.ht][mailing-list]
+
+[mailing-list]: mailto:~sircmpwn/public-inbox@lists.sr.ht
