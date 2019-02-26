@@ -195,7 +195,7 @@ static void parse_linebreak(struct parser *p) {
 }
 
 static void parse_text(struct parser *p) {
-	uint32_t ch, last = ' ';
+	uint32_t ch, next, last = ' ';
 	int i = 0;
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
 		switch (ch) {
@@ -213,11 +213,13 @@ static void parse_text(struct parser *p) {
 			parse_format(p, FORMAT_BOLD);
 			break;
 		case '_':
-			if (!isalnum(last) || (p->flags & FORMAT_UNDERLINE)) {
+			next = parser_getch(p);
+			if (!isalnum(last) || ((p->flags & FORMAT_UNDERLINE) && !isalnum(next))) {
 				parse_format(p, FORMAT_UNDERLINE);
 			} else {
 				utf8_fputch(p->output, ch);
 			}
+			parser_pushch(p, next);
 			break;
 		case '+':
 			parse_linebreak(p);

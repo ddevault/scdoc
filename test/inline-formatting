@@ -17,7 +17,15 @@ hello_world
 EOF
 end 0
 
-begin "Allows underscores in bolded words"
+begin "Ignores underscores in underlined words"
+scdoc <<EOF | grep '\\fIhello_world\\fR' >/dev/null
+test(8)
+
+_hello_world_
+EOF
+end0
+
+begin "Ignores underscores in bolded words"
 scdoc <<EOF | grep '^\\fBhello_world\\fR' >/dev/null
 test(8)
 
