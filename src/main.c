@@ -219,6 +219,9 @@ static void parse_text(struct parser *p) {
 			} else {
 				utf8_fputch(p->output, ch);
 			}
+			if (next == UTF8_INVALID) {
+				return;
+			}
 			parser_pushch(p, next);
 			break;
 		case '+':
