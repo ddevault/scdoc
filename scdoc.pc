@@ -4,4 +4,4 @@ scdoc=${exec_prefix}/bin/scdoc
 
 Name: scdoc
 Description: Man page generator
-Version: 1.9.1
+Version: 1.9.2
