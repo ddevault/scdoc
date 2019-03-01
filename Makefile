@@ -41,6 +41,7 @@ clean:
 	rm -rf $(OUTDIR) scdoc scdoc.1 scdoc.5
 
 install: all
+	mkdir -p $(BINDIR) $(MANDIR)/man1 $(MANDIR)/man5 $(PCDIR)
 	install -Dm755 scdoc $(BINDIR)/scdoc
 	install -Dm644 scdoc.1 $(MANDIR)/man1/scdoc.1
 	install -Dm644 scdoc.5 $(MANDIR)/man5/scdoc.5
