@@ -35,10 +35,13 @@ scdoc.1: scdoc.1.scd $(HOST_SCDOC)
 scdoc.5: scdoc.5.scd $(HOST_SCDOC)
 	$(HOST_SCDOC) < $< > $@
 
-all: scdoc scdoc.1 scdoc.5
+scdoc.pc: scdoc.pc.in
+	sed -e 's:@prefix@:$(PREFIX):g' -e 's:@version@:$(VERSION):g' < $< > $@
+
+all: scdoc scdoc.1 scdoc.5 scdoc.pc
 
 clean:
-	rm -rf $(OUTDIR) scdoc scdoc.1 scdoc.5
+	rm -rf $(OUTDIR) scdoc scdoc.1 scdoc.5 scdoc.pc
 
 install: all
 	mkdir -p $(BINDIR) $(MANDIR)/man1 $(MANDIR)/man5 $(PCDIR)
