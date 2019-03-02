@@ -45,10 +45,10 @@ clean:
 
 install: all
 	mkdir -p $(BINDIR) $(MANDIR)/man1 $(MANDIR)/man5 $(PCDIR)
-	install -Dm755 scdoc $(BINDIR)/scdoc
-	install -Dm644 scdoc.1 $(MANDIR)/man1/scdoc.1
-	install -Dm644 scdoc.5 $(MANDIR)/man5/scdoc.5
-	install -Dm644 scdoc.pc $(PCDIR)/scdoc.pc
+	install -m755 scdoc $(BINDIR)/scdoc
+	install -m644 scdoc.1 $(MANDIR)/man1/scdoc.1
+	install -m644 scdoc.5 $(MANDIR)/man5/scdoc.5
+	install -m644 scdoc.pc $(PCDIR)/scdoc.pc
 
 check: scdoc scdoc.1 scdoc.5
 	@find test -perm -111 -exec '{}' \;
