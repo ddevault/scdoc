@@ -23,7 +23,7 @@ test(8)
 
 _hello_world_
 EOF
-end0
+end 0
 
 begin "Ignores underscores in bolded words"
 scdoc <<EOF | grep '^\\fBhello_world\\fR' >/dev/null
