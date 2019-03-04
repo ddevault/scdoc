@@ -70,10 +70,11 @@ test-manual(8) "" "Header"
 EOF
 end 0
 
+export TZ=UTC
 export SOURCE_DATE_EPOCH=$(date --date="2017-12-09 23:18:57" +'%s')
 
 begin "Supports \$SOURCE_DATE_EPOCH"
-scdoc <<EOF | grep '^\.TH "reproducible-manual" "8" "2017-12-10"' >/dev/null
+scdoc <<EOF | grep '^\.TH "reproducible-manual" "8" "2017-12-09"' >/dev/null
 reproducible-manual(8)
 EOF
 end 0
