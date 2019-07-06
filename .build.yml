@@ -1,0 +1,27 @@
+image: alpine/edge
+packages:
+- flex
+- bison
+sources:
+- https://git.sr.ht/~sircmpwn/scdoc
+- https://git.sr.ht/~sircmpwn/annotatec
+secrets:
+- 52022781-b772-4d8d-b7fe-0d962a4947b6
+tasks:
+- build: |
+    cd scdoc
+    make
+- check: |
+    cd scdoc
+    make check
+- annotatec: |
+    cd annotatec
+    make
+    sudo make install PREFIX=/usr
+- annotations: |
+    cd ~/scdoc
+    # that version string, jesus christ
+    find src -name "*.c" | \
+      xargs annotatec -gC 'cpp -DVERSION='"'"'"0.0.0"'"'"' -std=c99 -Iinclude -U__GNUC__' \
+      >annotations.json
+    ~/upload-annotations annotations.json sircmpwn scdoc
