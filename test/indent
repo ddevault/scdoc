@@ -19,3 +19,14 @@ Not indented
 Not indented
 EOF
 end 0
+
+begin "Disallows indentation changes > 1"
+scdoc <<EOF >/dev/null
+test(8)
+
+Not indented
+	Indented one level
+			Indented three levels
+Not indented
+EOF
+end 1
