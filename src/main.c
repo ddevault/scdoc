@@ -286,12 +286,9 @@ static int parse_indent(struct parser *p, int *indent, bool write) {
 		++i;
 	}
 	parser_pushch(p, ch);
-	if ((ch == '\n' || ch == UTF8_INVALID) && *indent != 0) {
-		// Don't change indent when we encounter empty lines or EOF
+	if (ch == '\n' && *indent != 0) {
+		// Don't change indent when we encounter empty lines
 		return *indent;
-	}
-	if (abs(i - *indent) > 1) {
-		parser_fatal(p, "Changed indentation by an amount greater than 1");
 	}
 	if (write) {
 		if (i < *indent) {
@@ -300,6 +297,8 @@ static int parse_indent(struct parser *p, int *indent, bool write) {
 			}
 		} else if (i == *indent + 1) {
 			fprintf(p->output, ".RS 4\n");
+		} else if (i != *indent && ch == '\t') {
+			parser_fatal(p, "Indented by an amount greater than 1");
 		}
 	}
 	*indent = i;
