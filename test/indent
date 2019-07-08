@@ -19,3 +19,38 @@ Not indented
 Not indented
 EOF
 end 0
+
+begin "Disallows multi-step indents"
+scdoc <<EOF >/dev/null
+test(8)
+
+Not indented
+	Indented one level
+			Indented three levels
+Not indented
+EOF
+end 1
+
+begin "Allows indentation changes > 1 in literal blocks"
+scdoc <<EOF >/dev/null
+test(8)
+
+This is some code:
+
+\`\`\`
+foobar:
+                # asdf
+\`\`\`
+EOF
+end 0
+
+begin "Allows multi-step dedents"
+scdoc <<EOF >/dev/null
+test(8)
+
+Not indented
+	Indented one level
+		Indented two levels
+Not indented
+EOF
+end 0
