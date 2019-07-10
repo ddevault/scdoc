@@ -138,7 +138,7 @@ static void parse_preamble(struct parser *p) {
 			}
 			fprintf(p->output, "\n");
 			break;
-		} else {
+		} else if (section == -1) {
 			parser_fatal(p, "Name characters must be A-Z, a-z, 0-9, `-`, `_`, or `.`");
 		}
 	}
