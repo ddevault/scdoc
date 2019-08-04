@@ -333,7 +333,6 @@ static void parse_list(struct parser *p, int *indent, int num) {
 	}
 	list_header(p, &num);
 	parse_text(p);
-	bool closed = false;
 	do {
 		parse_indent(p, indent, true);
 		if ((ch = parser_getch(p)) == UTF8_INVALID) {
@@ -351,12 +350,9 @@ static void parse_list(struct parser *p, int *indent, int num) {
 			if ((ch = parser_getch(p)) != ' ') {
 				parser_fatal(p, "Expected space before start of list entry");
 			}
-			if (!closed) {
-				roff_macro(p, "RE", NULL);
-			}
+			roff_macro(p, "RE", NULL);
 			list_header(p, &num);
 			parse_text(p);
-			closed = false;
 			break;
 		default:
 			fprintf(p->output, "\n");
@@ -365,9 +361,7 @@ static void parse_list(struct parser *p, int *indent, int num) {
 		}
 	} while (ch != UTF8_INVALID);
 ret:
-	if (!closed) {
-		roff_macro(p, "RE", NULL);
-	}
+	roff_macro(p, "RE", NULL);
 }
 
 static void parse_literal(struct parser *p, int *indent) {
