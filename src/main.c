@@ -374,15 +374,19 @@ static void parse_literal(struct parser *p, int *indent) {
 	int stops = 0;
 	roff_macro(p, "nf", NULL);
 	fprintf(p->output, ".RS 4\n");
+	bool check_indent = true;
 	do {
-		int _indent = *indent;
-		parse_indent(p, &_indent, false);
-		if (_indent < *indent) {
-			parser_fatal(p, "Cannot deindent in literal block");
-		}
-		while (_indent > *indent) {
-			--_indent;
-			fprintf(p->output, "\t");
+		if (check_indent) {
+			int _indent = *indent;
+			parse_indent(p, &_indent, false);
+			if (_indent < *indent) {
+				parser_fatal(p, "Cannot deindent in literal block");
+			}
+			while (_indent > *indent) {
+				--_indent;
+				fprintf(p->output, "\t");
+			}
+			check_indent = false;
 		}
 		if ((ch = parser_getch(p)) == UTF8_INVALID) {
 			break;
@@ -415,6 +419,9 @@ static void parse_literal(struct parser *p, int *indent) {
 					utf8_fputch(p->output, ch);
 				}
 				break;
+			case '\n':
+				check_indent = true;
+				/* fallthrough */
 			default:
 				utf8_fputch(p->output, ch);
 				break;

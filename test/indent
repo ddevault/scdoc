@@ -54,3 +54,24 @@ Not indented
 Not indented
 EOF
 end 0
+
+begin "Allows indented literal blocks"
+scdoc <<EOF >/dev/null
+test(8)
+
+	\`\`\`
+	This block is indented.
+	\`\`\`
+EOF
+end 0
+
+begin "Disallows dedenting in literal blocks"
+scdoc <<EOF >/dev/null
+test(8)
+
+		\`\`\`
+		This block is indented.
+	This line is dedented past the start of the block.
+		\`\`\`
+EOF
+end 1
