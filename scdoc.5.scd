@@ -155,6 +155,21 @@ To conclude your table, add an empty line after the last row.
 :  世界
    !
 
+You may also cause columns to expand to fill the available space with < (left
+align), = (center align), and > (right align), like so:
+
+```
+[[ *Normal column*
+:< Expanded column
+|  *Foo*
+:  Bar
+```
+
+[[ *Normal column*
+:< Expanded column
+|  *Foo*
+:  Bar
+
 ## LITERAL TEXT
 
 You may turn off scdoc formatting and output literal text with escape codes and

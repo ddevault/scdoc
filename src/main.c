@@ -434,6 +434,9 @@ enum table_align {
 	ALIGN_LEFT,
 	ALIGN_CENTER,
 	ALIGN_RIGHT,
+	ALIGN_LEFT_EXPAND,
+	ALIGN_CENTER_EXPAND,
+	ALIGN_RIGHT_EXPAND,
 };
 
 struct table_row {
@@ -508,6 +511,15 @@ static void parse_table(struct parser *p, uint32_t style) {
 		case ']':
 			curcell->align = ALIGN_RIGHT;
 			break;
+		case '<':
+			curcell->align = ALIGN_LEFT_EXPAND;
+			break;
+		case '=':
+			curcell->align = ALIGN_CENTER_EXPAND;
+			break;
+		case '>':
+			curcell->align = ALIGN_RIGHT_EXPAND;
+			break;
 		case ' ':
 			if (prevrow) {
 				struct table_cell *pcell = prevrow->cell;
@@ -576,8 +588,28 @@ commit_table:
 	while (currow) {
 		curcell = currow->cell;
 		while (curcell) {
-			fprintf(p->output, "%c%s", "lcr"[curcell->align],
-					curcell->next ? " " : "");
+			char *align = "";
+			switch (curcell->align) {
+			case ALIGN_LEFT:
+				align = "l";
+				break;
+			case ALIGN_CENTER:
+				align = "c";
+				break;
+			case ALIGN_RIGHT:
+				align = "r";
+				break;
+			case ALIGN_LEFT_EXPAND:
+				align = "lx";
+				break;
+			case ALIGN_CENTER_EXPAND:
+				align = "cx";
+				break;
+			case ALIGN_RIGHT_EXPAND:
+				align = "rx";
+				break;
+			}
+			fprintf(p->output, "%s%s", align, curcell->next ? " " : "");
 			curcell = curcell->next;
 		}
 		fprintf(p->output, "%s\n", currow->next ? "" : ".");
