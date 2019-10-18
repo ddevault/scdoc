@@ -3,7 +3,7 @@
 #include "str.h"
 #include "unicode.h"
 
-static int ensure_capacity(str_t *str, size_t len) {
+static int ensure_capacity(struct str *str, size_t len) {
 	if (len + 1 >= str->size) {
 		char *new = realloc(str->str, str->size * 2);
 		if (!new) {
@@ -15,8 +15,8 @@ static int ensure_capacity(str_t *str, size_t len) {
 	return 1;
 }
 
-str_t *str_create() {
-	str_t *str = calloc(sizeof(str_t), 1);
+struct str *str_create() {
+	struct str *str = calloc(sizeof(struct str), 1);
 	str->str = malloc(16);
 	str->size = 16;
 	str->len = 0;
@@ -24,13 +24,13 @@ str_t *str_create() {
 	return str;
 }
 
-void str_free(str_t *str) {
+void str_free(struct str *str) {
 	if (!str) return;
 	free(str->str);
 	free(str);
 }
 
-int str_append_ch(str_t *str, uint32_t ch) {
+int str_append_ch(struct str *str, uint32_t ch) {
 	int size = utf8_chsize(ch);
 	if (size <= 0) {
 		return -1;

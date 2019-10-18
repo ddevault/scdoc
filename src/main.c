@@ -17,7 +17,7 @@ char *strstr(const char *haystack, const char *needle);
 char *strerror(int errnum);
 
 static int parse_section(struct parser *p) {
-	str_t *section = str_create();
+	struct str *section = str_create();
 	uint32_t ch;
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
 		if (ch < 0x80 && isdigit(ch)) {
@@ -43,8 +43,8 @@ static int parse_section(struct parser *p) {
 	return -1;
 }
 
-static str_t *parse_extra(struct parser *p) {
-	str_t *extra = str_create();
+static struct str *parse_extra(struct parser *p) {
+	struct str *extra = str_create();
 	int ret = str_append_ch(extra, '"');
 	assert(ret != -1);
 	uint32_t ch;
@@ -66,9 +66,9 @@ static str_t *parse_extra(struct parser *p) {
 }
 
 static void parse_preamble(struct parser *p) {
-	str_t *name = str_create();
+	struct str *name = str_create();
 	int ex = 0;
-	str_t *extras[2] = { NULL };
+	struct str *extras[2] = { NULL };
 	int section = -1;
 	uint32_t ch;
 	time_t date_time;
@@ -446,7 +446,7 @@ struct table_row {
 
 struct table_cell {
 	enum table_align align;
-	str_t *contents;
+	struct str *contents;
 	struct table_cell *next;
 };
 
