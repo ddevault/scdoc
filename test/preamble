@@ -25,21 +25,39 @@ scdoc <<EOF >/dev/null
 EOF
 end 1
 
-begin "Expects section to be a number"
+begin "Expects section to start with a number"
 scdoc <<EOF >/dev/null
 test(hello)
 EOF
 end 1
 
-begin "Expects section to legit"
+begin "Expects section to be legit"
 scdoc <<EOF >/dev/null
 test(100)
+EOF
+end 1
+
+begin "Expects section to be legit with subsection"
+scdoc <<EOF >/dev/null
+test(100hello)
+EOF
+end 1
+
+begin "Expects section not to contain a space"
+scdoc <<EOF >/dev/null
+test(8 hello)
 EOF
 end 1
 
 begin "Accepts a valid preamble"
 scdoc <<EOF >/dev/null
 test(8)
+EOF
+end 0
+
+begin "Accepts a valid preamble with subsection"
+scdoc <<EOF >/dev/null
+test(8hello)
 EOF
 end 0
 

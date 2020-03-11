@@ -16,31 +16,35 @@
 char *strstr(const char *haystack, const char *needle);
 char *strerror(int errnum);
 
-static int parse_section(struct parser *p) {
+static struct str *parse_section(struct parser *p) {
 	struct str *section = str_create();
 	uint32_t ch;
+	char *subsection;
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
-		if (ch < 0x80 && isdigit(ch)) {
+		if (ch < 0x80 && isalnum(ch)) {
 			int ret = str_append_ch(section, ch);
 			assert(ret != -1);
 		} else if (ch == ')') {
 			if (section->len == 0) {
 				break;
 			}
-			int sec = strtol(section->str, NULL, 10);
+			int sec = strtol(section->str, &subsection, 10);
+			if (section->str == subsection) {
+				parser_fatal(p, "Expected section digit");
+				break;
+			}
 			if (sec < 0 || sec > 9) {
 				parser_fatal(p, "Expected section between 0 and 9");
 				break;
 			}
-			str_free(section);
-			return sec;
+			return section;
 		} else {
-			parser_fatal(p, "Expected digit or )");
+			parser_fatal(p, "Expected alphanumerical character or )");
 			break;
 		}
 	};
 	parser_fatal(p, "Expected manual section");
-	return -1;
+	return NULL;
 }
 
 static struct str *parse_extra(struct parser *p) {
@@ -69,7 +73,7 @@ static void parse_preamble(struct parser *p) {
 	struct str *name = str_create();
 	int ex = 0;
 	struct str *extras[2] = { NULL };
-	int section = -1;
+	struct str *section = NULL;
 	uint32_t ch;
 	time_t date_time;
 	char date[256];
@@ -122,13 +126,12 @@ static void parse_preamble(struct parser *p) {
 			if (name->len == 0) {
 				parser_fatal(p, "Expected preamble");
 			}
-			if (section == -1) {
+			if (section == NULL) {
 				parser_fatal(p, "Expected manual section");
 			}
-			char sec[2] = { '0' + section, 0 };
 			char *ex2 = extras[0] != NULL ? extras[0]->str : NULL;
 			char *ex3 = extras[1] != NULL ? extras[1]->str : NULL;
-			fprintf(p->output, ".TH \"%s\" \"%s\" \"%s\"", name->str, sec, date);
+			fprintf(p->output, ".TH \"%s\" \"%s\" \"%s\"", name->str, section->str, date);
 			/* ex2 and ex3 are already double-quoted */
 			if (ex2) {
 				fprintf(p->output, " %s", ex2);
@@ -138,7 +141,7 @@ static void parse_preamble(struct parser *p) {
 			}
 			fprintf(p->output, "\n");
 			break;
-		} else if (section == -1) {
+		} else if (section == NULL) {
 			parser_fatal(p, "Name characters must be A-Z, a-z, 0-9, `-`, `_`, or `.`");
 		}
 	}
