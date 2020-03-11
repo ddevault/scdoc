@@ -13,6 +13,12 @@ test
 EOF
 end 1
 
+begin "Expects a section within the parentheses"
+scdoc <<EOF >/dev/null
+test()
+EOF
+end 1
+
 begin "Expects name to alphanumeric"
 scdoc <<EOF >/dev/null
 !!!!(8)

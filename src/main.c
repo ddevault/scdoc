@@ -24,7 +24,7 @@ static int parse_section(struct parser *p) {
 			int ret = str_append_ch(section, ch);
 			assert(ret != -1);
 		} else if (ch == ')') {
-			if (!section->str) {
+			if (section->len == 0) {
 				break;
 			}
 			int sec = strtol(section->str, NULL, 10);
