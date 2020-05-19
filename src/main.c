@@ -186,8 +186,8 @@ static void parse_linebreak(struct parser *p) {
 	uint32_t lf = parser_getch(p);
 	if (lf != '\n') {
 		fprintf(p->output, "+");
+		parser_pushch(p, lf);
 		parser_pushch(p, plus);
-		parser_pushch(p, '\n');
 		return;
 	}
 	uint32_t ch = parser_getch(p);

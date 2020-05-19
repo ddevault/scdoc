@@ -27,3 +27,11 @@ test(8)
 hello+world
 EOF
 end 0
+
+begin "Leave double + without newline"
+scdoc <<EOF | grep 'hello++world' >/dev/null
+test(8)
+
+hello++world
+EOF
+end 0
