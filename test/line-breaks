@@ -1,0 +1,29 @@
+#!/bin/sh
+. test/lib.sh
+
+begin "Handles line break"
+scdoc <<EOF | grep '^\.br$' >/dev/null
+test(8)
+
+hello++
+world
+EOF
+end 0
+
+begin "Disallows empty line after line break"
+scdoc <<EOF >/dev/null
+test(8)
+
+hello++
+
+world
+EOF
+end 1
+
+begin "Leave single +"
+scdoc <<EOF | grep 'hello+world' >/dev/null
+test(8)
+
+hello+world
+EOF
+end 0
