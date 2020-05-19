@@ -35,3 +35,12 @@ test(8)
 hello++world
 EOF
 end 0
+
+begin "Handles underlined text following line break"
+scdoc <<EOF | grep '\\fIworld\\fR' >/dev/null
+test(8)
+
+hello++
+_world_
+EOF
+end 0

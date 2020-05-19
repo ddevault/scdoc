@@ -176,19 +176,19 @@ static void parse_format(struct parser *p, enum formatting fmt) {
 	p->flags ^= fmt;
 }
 
-static void parse_linebreak(struct parser *p) {
+static bool parse_linebreak(struct parser *p) {
 	uint32_t plus = parser_getch(p);
 	if (plus != '+') {
 		fprintf(p->output, "+");
 		parser_pushch(p, plus);
-		return;
+		return false;
 	}
 	uint32_t lf = parser_getch(p);
 	if (lf != '\n') {
 		fprintf(p->output, "+");
 		parser_pushch(p, lf);
 		parser_pushch(p, plus);
-		return;
+		return false;
 	}
 	uint32_t ch = parser_getch(p);
 	if (ch == '\n') {
@@ -197,6 +197,7 @@ static void parse_linebreak(struct parser *p) {
 	}
 	parser_pushch(p, ch);
 	fprintf(p->output, "\n.br\n");
+	return true;
 }
 
 static void parse_text(struct parser *p) {
@@ -230,7 +231,9 @@ static void parse_text(struct parser *p) {
 			parser_pushch(p, next);
 			break;
 		case '+':
-			parse_linebreak(p);
+			if (parse_linebreak(p)) {
+				last = '\n';
+			}
 			break;
 		case '\n':
 			utf8_fputch(p->output, ch);
