@@ -4,8 +4,6 @@ packages:
 - bison
 sources:
 - https://git.sr.ht/~sircmpwn/scdoc
-secrets:
-- 52022781-b772-4d8d-b7fe-0d962a4947b6
 tasks:
 - build: |
     cd scdoc
