@@ -1,7 +1,4 @@
 image: alpine/edge
-packages:
-- flex
-- bison
 sources:
 - https://git.sr.ht/~sircmpwn/scdoc
 tasks:
