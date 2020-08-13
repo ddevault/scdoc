@@ -241,10 +241,17 @@ static void parse_text(struct parser *p) {
 		case '.':
 			if (!i) {
 				// Escape . if it's the first character
-				fprintf(p->output, "\\&.");
+				fprintf(p->output, "\\&.\\&");
 				break;
 			}
 			/* fallthrough */
+		case '!':
+		case '?':
+			last = ch;
+			utf8_fputch(p->output, ch);
+			// Suppress sentence spacing
+			fprintf(p->output, "\\&");
+			break;
 		default:
 			last = ch;
 			utf8_fputch(p->output, ch);

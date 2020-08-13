@@ -120,7 +120,7 @@ To begin a table, add an empty line followed by any number of rows.
 Each line of a table should start with | or : to start a new row or column
 respectively (or space to continue the previous cell on multiple lines),
 followed by [ or - or ] to align the contents to the left, center, or right,
-followed by a space and the contents of that cell.  You may use a space instead
+followed by a space and the contents of that cell. You may use a space instead
 of an alignment specifier to inherit the alignment of the same column in the
 previous row.
 

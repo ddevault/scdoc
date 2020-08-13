@@ -44,3 +44,12 @@ hello++
 _world_
 EOF
 end 0
+
+begin "Suppresses sentence spacing"
+scdoc <<EOF | grep 'hel!\\&lo.\\&' >/dev/null
+test(8)
+
+hel!lo.
+world.
+EOF
+end 0
