@@ -16,7 +16,7 @@ static int ensure_capacity(struct str *str, size_t len) {
 }
 
 struct str *str_create() {
-	struct str *str = calloc(sizeof(struct str), 1);
+	struct str *str = calloc(1, sizeof(struct str));
 	str->str = malloc(16);
 	str->size = 16;
 	str->len = 0;
