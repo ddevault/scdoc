@@ -21,7 +21,7 @@ static struct str *parse_section(struct parser *p) {
 	uint32_t ch;
 	char *subsection;
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
-		if (ch < 0x80 && isalnum(ch)) {
+		if (ch < 0x80 && isalnum((unsigned char)ch)) {
 			int ret = str_append_ch(section, ch);
 			assert(ret != -1);
 		} else if (ch == ')') {
@@ -112,7 +112,8 @@ static void parse_preamble(struct parser *p) {
 	struct tm *date_tm = gmtime(&date_time);
 	strftime(date, sizeof(date), "%F", date_tm);
 	while ((ch = parser_getch(p)) != UTF8_INVALID) {
-		if ((ch < 0x80 && isalnum(ch)) || ch == '_' || ch == '-' || ch == '.') {
+		if ((ch < 0x80 && isalnum((unsigned char)ch))
+				|| ch == '_' || ch == '-' || ch == '.') {
 			int ret = str_append_ch(name, ch);
 			assert(ret != -1);
 		} else if (ch == '(') {
@@ -220,7 +221,9 @@ static void parse_text(struct parser *p) {
 			break;
 		case '_':
 			next = parser_getch(p);
-			if (!isalnum(last) || ((p->flags & FORMAT_UNDERLINE) && !isalnum(next))) {
+			if (!isalnum((unsigned char)last) || (
+						(p->flags & FORMAT_UNDERLINE) &&
+						!isalnum((unsigned char)next))) {
 				parse_format(p, FORMAT_UNDERLINE);
 			} else {
 				utf8_fputch(p->output, ch);
